@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- Auth.js (NextAuth) models ---
+// Standard shape required by @auth/prisma-adapter.
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  login         String?   @unique
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+
+  accounts Account[]
+  sessions Session[]
+  analyses Analysis[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// --- Domain models ---
+
+enum AnalysisStatus {
+  PENDING
+  RUNNING
+  COMPLETE
+  FAILED
+}
+
+model Analysis {
+  id               String         @id @default(cuid())
+  userId           String
+  repoOwner        String
+  repoName         String
+  issueNumber      Int
+  issueTitle       String
+  issueBody        String         @db.Text
+  status           AnalysisStatus @default(PENDING)
+  plan             Json?
+  suggestedChanges Json?
+  caseSummary      Json?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  user     User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  steps    InvestigationStep[]
+  findings Finding[]
+
+  @@index([userId])
+}
+
+enum StepStatus {
+  PENDING
+  ACTIVE
+  DONE
+  FAILED
+}
+
+model InvestigationStep {
+  id          String     @id @default(cuid())
+  analysisId  String
+  order       Int
+  label       String
+  status      StepStatus @default(PENDING)
+  detail      String?
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  analysis Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  @@index([analysisId])
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// Confidence + reasoning + impact fields make the "Ask Why?" and
+// "Impact Analysis" UI features pure reads against stored data,
+// not new generation calls.
+model Finding {
+  id               String     @id @default(cuid())
+  analysisId       String
+  filePath         String
+  theme            String?
+  confidence       Float
+  matchedTerms     String[]
+  snippet          String?    @db.Text
+  snippetStartLine Int?
+  snippetEndLine   Int?
+  reasoning        String     @db.Text
+  impactedBy       String[]
+  riskLevel        RiskLevel?
+
+  analysis Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  @@index([analysisId])
+}
