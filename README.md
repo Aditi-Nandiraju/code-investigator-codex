@@ -20,17 +20,16 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+How Codex & GPT-5.6 Were Used
 
-To learn more about Next.js, take a look at the following resources:
+During development, I used Codex with GPT-5.6 as an engineering assistant alongside other AI tools. It was particularly useful for:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Exploring and understanding unfamiliar parts of the codebase.
+Explaining the architecture of the application before implementing new features.
+Reviewing generated code and suggesting improvements.
+Helping troubleshoot integration issues involving Next.js, Prisma, Supabase, GitHub OAuth, and the LLM provider abstraction.
+Assisting with documentation, project organization, and preparing the hackathon submission materials.
+Validating implementation ideas and discussing alternative approaches while iterating on the investigation pipeline.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+While building the project, I made the final engineering decisions, refined the architecture, integrated the components, tested the application, and resolved issues through multiple iterations. GPT-5.6 and Codex accelerated development by acting as collaborative development tools for code understanding, debugging, and refinement rather than replacing manual engineering work.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
