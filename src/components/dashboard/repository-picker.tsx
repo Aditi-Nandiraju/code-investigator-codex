@@ -30,10 +30,14 @@ export function RepositoryPicker({
   onRepositorySelect?: (repository: GitHubRepository | null) => void;
 } = {}) {
   const [repositories, setRepositories] = useState<GitHubRepository[]>([]);
-  const [selected, setSelected] = useState<GitHubRepository | null>(getStoredRepository);
+  const [selected, setSelected] = useState<GitHubRepository | null>(null);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelected(getStoredRepository());
+  }, []);
 
   useEffect(() => {
     onRepositorySelect?.(selected);

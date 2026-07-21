@@ -26,7 +26,7 @@ function getStoredRepository(): Repository | null {
 
 export function InvestigationPage() {
   const router = useRouter();
-  const [repository] = useState<Repository | null>(getStoredRepository);
+  const [repository, setRepository] = useState<Repository | null>(null);
   const [url, setUrl] = useState("");
   const [state, setState] = useState<InvestigationState>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +41,10 @@ export function InvestigationPage() {
       activeRef.current = false;
       if (pollRef.current) clearInterval(pollRef.current);
     };
+  }, []);
+
+  useEffect(() => {
+    setRepository(getStoredRepository());
   }, []);
 
   function stopPolling() {

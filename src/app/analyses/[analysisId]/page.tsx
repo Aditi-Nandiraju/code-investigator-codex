@@ -109,7 +109,7 @@ export default async function AnalysisPage({ params }: { params: Promise<{ analy
                     <p className="mt-3 text-sm leading-6 text-slate-400">{finding.reasoning}</p>
                     {finding.matchedTerms.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-1.5">
-                        {finding.matchedTerms.map((term) => (
+                        {finding.matchedTerms.map((term: string) => (
                           <span key={term} className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-slate-300">{term}</span>
                         ))}
                       </div>
